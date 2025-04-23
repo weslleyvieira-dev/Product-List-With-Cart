@@ -49,10 +49,10 @@ function closeModal() {
             ${{ (item.quantity * item.price).toFixed(2) }}
           </p>
         </div>
-        <div class="order-total">
-          <p>Order Total</p>
-          <h2>${{ cart.totalOrder.toFixed(2) }}</h2>
-        </div>
+      </div>
+      <div class="order-total">
+        <p>Order Total</p>
+        <h2>${{ cart.totalOrder.toFixed(2) }}</h2>
       </div>
       <button class="new-order" v-on:click="closeModal">Start New Order</button>
     </div>
@@ -80,7 +80,7 @@ function closeModal() {
   background-color: hsl(20, 50%, 98%);
   padding: 2rem 2.5rem;
   border-radius: 1rem;
-  width: min(33rem, 70dvw);
+  width: min(35rem, 70dvw);
   max-height: 72dvh;
 }
 
@@ -103,10 +103,10 @@ function closeModal() {
   flex-direction: column;
   background-color: hsl(13, 31%, 94%);
   padding: 1rem 1.5rem 0;
-  border-radius: 1rem;
-  margin: 2rem 0;
+  border-radius: 1rem 1rem 0 0;
+  margin: 2rem 0 0;
   flex-grow: 1;
-  overflow-y: auto;
+  overflow-y: scroll;
 }
 
 .order-item {
@@ -137,6 +137,7 @@ function closeModal() {
 }
 
 .order-item-name {
+  font-weight: 600;
   margin: 0;
 }
 
@@ -169,7 +170,10 @@ function closeModal() {
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  margin: 1.5rem 0;
+  background-color: hsl(13, 31%, 94%);
+  border-radius: 0 0 1rem 1rem;
+  padding: 1.5rem 1.5rem;
+  margin: 0 0 2rem;
 }
 
 .order-total p {
@@ -229,7 +233,6 @@ function closeModal() {
   .order-item-name {
     display: block;
     min-width: 0;
-    font-weight: 600;
     width: 85%;
     white-space: nowrap;
     overflow: hidden;
