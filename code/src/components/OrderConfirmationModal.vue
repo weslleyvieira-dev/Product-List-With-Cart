@@ -18,9 +18,12 @@ function closeModal() {
   <div class="modal-overlay">
     <div class="modal">
       <div class="modal-header">
-      <img class="modal-icon" src="../assets/images/icon-order-confirmed.svg" />
-      <h1 class="modal-title">Order Confirmed</h1>
-      <p class="modal-message">We hope you enjoy your food!</p>
+        <img
+          class="modal-icon"
+          src="../assets/images/icon-order-confirmed.svg"
+        />
+        <h1 class="modal-title">Order Confirmed</h1>
+        <p class="modal-message">We hope you enjoy your food!</p>
       </div>
       <div class="order-itens">
         <div
@@ -192,5 +195,18 @@ function closeModal() {
   background-color: hsl(14, 86%, 32%);
   color: hsl(14, 25%, 82%);
   cursor: pointer;
+}
+
+@media (max-width: 1024px) {
+  .modal-overlay {
+    align-items: flex-end;
+  }
+
+  .modal {
+    width: auto;
+    height: max-content;
+    max-height: 80dvh;
+    overflow-y: visible;
+  }
 }
 </style>

@@ -13,6 +13,17 @@ const cart = reactive({
 
 const orderConfirmation = ref(false);
 
+function debounce(func, delay) {
+  let timeout;
+  return function (...args) {
+    clearTimeout(timeout);
+    timeout = setTimeout(() => func.apply(this, args), delay);
+  };
+}
+
+const debouncedAddToCart = debounce((dessert) => addToCart(dessert), 100);
+const debouncedSubFromCart = debounce((dessert) => subFromCart(dessert), 100);
+
 function isInCart(dessert) {
   return cart.items.some((item) => item.name === dessert.name);
 }
@@ -49,6 +60,11 @@ function removeFromCart(dessert) {
   }
 }
 
+function confirmOrder() {
+  window.scrollTo({ top: 0, behavior: "smooth" });
+  orderConfirmation.value = true;
+}
+
 function resetCart() {
   cart.items = [];
   cart.totalItems = 0;
@@ -58,7 +74,9 @@ function resetCart() {
 
 watch(orderConfirmation, (isOpen) => {
   if (isOpen) {
-    document.body.classList.add("no-scroll");
+    setTimeout(() => {
+      document.body.classList.add("no-scroll");
+    }, 1000);
   } else {
     document.body.classList.remove("no-scroll");
   }
@@ -94,7 +112,7 @@ watch(orderConfirmation, (isOpen) => {
             </picture>
             <button
               v-if="!isInCart(dessert)"
-              v-on:click="addToCart(dessert)"
+              v-on:click="debouncedAddToCart(dessert)"
               class="dessert-button"
             >
               <img
@@ -105,7 +123,7 @@ watch(orderConfirmation, (isOpen) => {
             <div class="dessert-control" v-else-if="isInCart(dessert)">
               <button
                 class="dessert-control-decrement"
-                v-on:click="subFromCart(dessert)"
+                v-on:click="debouncedSubFromCart(dessert)"
               >
                 <img src="./assets/images/icon-decrement-quantity.svg" />
               </button>
@@ -114,7 +132,7 @@ watch(orderConfirmation, (isOpen) => {
               }}
               <button
                 class="dessert-control-increment"
-                v-on:click="addToCart(dessert)"
+                v-on:click="debouncedAddToCart(dessert)"
               >
                 <img src="./assets/images/icon-increment-quantity.svg" />
               </button>
@@ -128,7 +146,11 @@ watch(orderConfirmation, (isOpen) => {
     </div>
     <div class="cart">
       <h1>Your Cart ({{ cart.totalItems }})</h1>
-      <div class="cart-items">
+      <div v-if="!cart.totalItems" class="empty-cart">
+        <img src="./assets/images/illustration-empty-cart.svg" />
+        <p>Your added items will appear here</p>
+      </div>
+      <div v-if="cart.totalItems" class="cart-items">
         <div class="cart-item" v-for="(item, index) in cart.items" :key="index">
           <div class="cart-item-details">
             <h2 class="cart-item-name">{{ item.name }}</h2>
@@ -145,26 +167,30 @@ watch(orderConfirmation, (isOpen) => {
           </button>
         </div>
       </div>
-      <div class="cart-total-order">
+      <div v-if="cart.totalItems" class="cart-total-order">
         <p>Order Total</p>
         <h2 class="cart-total-order-value">
           ${{ cart.totalOrder.toFixed(2) }}
         </h2>
       </div>
-      <div class="carbon-neutral">
+      <div v-if="cart.totalItems" class="carbon-neutral">
         <img src="./assets/images/icon-carbon-neutral.svg" />
         <p>This is a <strong>carbon-neutral</strong> delivery</p>
       </div>
       <button
-        :disabled="cart.totalItems === 0"
+        v-if="cart.totalItems"
         class="confirm-order"
-        v-on:click="orderConfirmation = true"
+        v-on:click="confirmOrder"
       >
         Confirm Order
       </button>
     </div>
     <div v-if="orderConfirmation">
-      <OrderConfirmationModal :cart="cart" @resetCart="resetCart" @close="orderConfirmation=false" />
+      <OrderConfirmationModal
+        :cart="cart"
+        @resetCart="resetCart"
+        @close="orderConfirmation = false"
+      />
     </div>
   </main>
 </template>
@@ -320,7 +346,7 @@ main {
   border-radius: 1rem;
   width: 100%;
   height: max-content;
-  margin: 2rem 0;
+  margin: 3rem 0;
   margin-right: 2rem;
 }
 
@@ -328,6 +354,25 @@ main {
   font-size: 1.8rem;
   margin-bottom: 1rem;
   color: hsl(14, 86%, 42%);
+}
+
+.empty-cart {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 0;
+  gap: 1rem;
+}
+
+.empty-cart img {
+  width: 10rem;
+  height: 10rem;
+}
+
+.empty-cart p {
+  font-weight: 600;
+  color: hsl(12, 20%, 44%);
 }
 
 .cart-items {
@@ -453,9 +498,49 @@ main {
   cursor: pointer;
 }
 
-.confirm-order:disabled {
-  background-color: hsl(13, 31%, 94%);
-  color: hsl(14, 25%, 72%);
-  cursor: not-allowed;
+@media (max-width: 1024px) {
+  main {
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    padding: 0;
+    resize: none;
+    box-sizing: border-box;
+    overflow-x: hidden;
+  }
+
+  /* ----- DESSERTS ----- */
+  .desserts {
+    padding: 0 2rem;
+    width: 90%;
+  }
+
+  .desserts h1 {
+    font-size: 2.5rem;
+    margin: 2rem 0;
+  }
+
+  .desserts-items {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .dessert-image {
+    width: 100%;
+  }
+
+  .dessert-category {
+    margin: 1.5rem 0 0;
+  }
+
+  /* ----- CARTS ----- */
+  .cart {
+    padding: 0 2rem;
+    width: 90%;
+    margin: 0 0 2rem;
+    resize: none;
+    box-sizing: border-box;
+  }
 }
 </style>
