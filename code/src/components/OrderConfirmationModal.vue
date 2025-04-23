@@ -203,10 +203,41 @@ function closeModal() {
   }
 
   .modal {
-    width: auto;
+    width: 100%;
     height: max-content;
     max-height: 80dvh;
     overflow-y: visible;
+    padding: 1.5rem;
+  }
+
+  .order-itens {
+    overflow-x: hidden;
+  }
+
+  .order-item-details {
+    flex: 1 1 0;
+    min-width: 0;
+  }
+
+  .order-item-view {
+    display: flex;
+    flex: 1 1 0;
+    min-width: 0;
+    gap: 1rem;
+  }
+
+  .order-item-name {
+    display: block;
+    min-width: 0;
+    font-weight: 600;
+    width: 85%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .order-item-total {
+    flex-shrink: 0;
   }
 }
 </style>
