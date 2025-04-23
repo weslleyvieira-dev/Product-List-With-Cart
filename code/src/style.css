@@ -1,0 +1,30 @@
+@font-face {
+  font-family: "Red Hat Text";
+  src: url("./assets/fonts/RedHatText-VariableFont_wght.ttf") format("truetype");
+  font-style: normal;
+}
+
+* {
+  font-family: "Red Hat Text", sans-serif;
+  font-size: 1rem;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+}
+
+@media (max-width: 1024px) {
+  html,
+  body {
+    width: 100dvw;
+    height: 100dvh;
+  }
+}
+
+.no-scroll {
+  overflow: hidden;
+}
